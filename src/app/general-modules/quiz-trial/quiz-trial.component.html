@@ -2,7 +2,7 @@
   <div class="row m-12">
     <div
       *ngFor="let question of questions; let qIndex = index"
-      class="card bg-info m-8 col-4 text-white text-left"
+      class="card bg-secondary m-8 col-4 text-white text-left"
       style="max-width: 350px"
     >
       <div
@@ -13,7 +13,7 @@
       <div class="card-body">
         <div
           *ngFor="let answer of question.answers; let aIndex = index"
-          class="form-check d-flex flex-row align-items-center mb-8"
+          class="form-check d-flex flex-row align-items-center mb-8 fw-8"
           [ngClass]="{
             'text-success': submitted && answer.isCorrect,
             'text-danger': submitted && !answer.isCorrect

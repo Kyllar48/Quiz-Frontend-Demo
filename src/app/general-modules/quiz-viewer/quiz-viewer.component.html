@@ -11,8 +11,8 @@
           <h5 class="card-title">{{ quiz.title }}</h5>
           <p
             class="card-text font-italic fs-12 text-break text-truncate-after-three-lines"
+            [innerHTML]="quiz.theory"
           >
-            {{ quiz.theory }}
           </p>
           <a
             *ngIf="loggedUser.isAdmin"

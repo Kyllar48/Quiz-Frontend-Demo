@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { UserModel } from './models/user.model';
 import { QuizModel } from './models/quiz.model';
 import { QuestionModel } from './models/question.model';
@@ -13,7 +13,7 @@ import { UserQuizSolutionModel } from './models/user-quiz-solution.model';
 export class UserQuizService {
   constructor(private httpClient: HttpClient) {}
 
-  public apiUrl = 'localhost:8080/api/v1';
+  public apiUrl = 'http://localhost:8080/api';
   public mockedUsers = [
     { id: 1, username: 'Alexander', password: '1234', isAdmin: true },
     { id: 2, username: 'Denis', password: '1234', isAdmin: false },
@@ -280,77 +280,78 @@ s]]]
   }
 
   public signUpUser(username: string, password: string): Observable<UserModel> {
-    const user = {
-      id: this.mockedUsers.length,
-      username: username,
-      password: null,
-      isAdmin: false,
-    } as UserModel;
-    this.mockedUsers.push(user);
-
-    return of(user);
-
-    // return this.post(`${this.apiUrl}/user`, {
+    // const user = {
+    //   id: this.mockedUsers.length,
     //   username: username,
-    //   password: password,
-    // });
+    //   password: null,
+    //   isAdmin: false,
+    // } as UserModel;
+    // this.mockedUsers.push(user);
+
+    // return of(user);
+
+    return this.post(`${this.apiUrl}/user`, {
+      username: username,
+      password: password,
+    });
   }
 
   public loginUser(username: string, password: string): Observable<UserModel> {
-    const user = this.mockedUsers.find(
-      (u) => u.username === username && u.password === password
-    );
-    if (user) {
-      return of(user);
-    }
-    return of(new UserModel());
-    // return this.post(`${this.apiUrl}/user/login`, {
-    //   username: username,
-    //   password: password,
-    // });
+    // const user = this.mockedUsers.find(
+    //   (u) => u.username === username && u.password === password
+    // );
+    // if (user) {
+    //   return of(user);
+    // }
+    // return of(new UserModel());
+    var url = `${this.apiUrl}/user/login`;
+    return this.post(url, {
+      username: username,
+      password: password,
+    });
   }
 
   public grantAdmin(userId: number): Observable<void> {
-    const index = this.mockedUsers.findIndex((u) => u.id === userId);
-    if (index >= 0) {
-      this.mockedUsers[index].isAdmin = true;
-    }
-
-    return of();
-    // return this.put(`${this.apiUrl}/user/grant-admin/${userId}`, null);
+    // const index = this.mockedUsers.findIndex((u) => u.id === userId);
+    // if (index >= 0) {
+    //   this.mockedUsers[index].isAdmin = true;
+    // }
+    //
+    // return of();
+    return this.put(`${this.apiUrl}/user/grant-admin/${userId}`, null);
   }
 
   public getNonAdminUsers(): Observable<UserModel[]> {
-    return of(this.mockedUsers.filter((u) => !u.isAdmin));
-    // return this.get(`${this.apiUrl}/user/non-admin`);
+    // return of(this.mockedUsers.filter((u) => !u.isAdmin));
+    return this.get(`${this.apiUrl}/user/non-admin`);
   }
 
   public getQuizes(): Observable<QuizModel[]> {
-    return of(this.mockedQuizzes);
-    // return this.get(`${this.apiUrl}/quiz`);
+    // return of(this.mockedQuizzes);
+    return this.get(`${this.apiUrl}/quiz`);
   }
 
   public getQuizById(quizId: number): Observable<QuizModel> {
-    return of(this.mockedQuizzes.find((q) => q.id === quizId));
-    // return this.get(`${this.apiUrl}/quiz/${quizId}`);
+    // return of(this.mockedQuizzes.find((q) => q.id === quizId));
+    return this.get(`${this.apiUrl}/quiz/${quizId}`);
   }
 
   public getUserHistory(
     userId: number,
     quizId: number
   ): Observable<UserQuizSolutionModel[]> {
-    return of(
-      this.fakeHistory.filter(
-        (uqs) => uqs.userId === userId && uqs.quizId === quizId
-      )
-    );
-    // return this.get(`${this.apiUrl}/solution/user/${userId}/quiz/${quizId}`);
+    // return of(
+    //   this.fakeHistory.filter(
+    //     (uqs) => uqs.userId === userId && uqs.quizId === quizId
+    //   )
+    // );
+    return this.get(`${this.apiUrl}/solution/user/${userId}/quiz/${quizId}`);
   }
 
   public addSolution(solution: UserQuizSolutionModel): Observable<void> {
-    this.fakeHistory.push(solution);
-    return of();
-    // return this.post(`${this.apiUrl}/solution`, solution);
+    // this.fakeHistory.push(solution);
+    // return of();
+    return this.post(`${this.apiUrl}/solution`, solution);
   }
 
   public addQuestion(
@@ -358,32 +359,32 @@ s]]]
     statement: string,
     answers: AnswerModel[]
   ): Observable<QuestionModel> {
-    const generatedQuestionId =
-      this.mockedQuizzes
-        .find((q) => q.id === quizId)
-        .questions.reduce((a, b) => Math.max(a, b.id), -Infinity) + 1;
-    return of({
-      id: generatedQuestionId,
-      statement: statement,
-      answers: answers.map((answer, index) => {
-        return {
-          id: index + 1,
-          statement: answer.statement,
-          isCorrect: answer.isCorrect,
-          displayOrder: index + 1,
-        } as AnswerModel;
-      }),
-    } as QuestionModel);
-    // return this.post(`${this.apiUrl}/question`, {
-    //   quizId: quizId,
+    // const generatedQuestionId =
+    //   this.mockedQuizzes
+    //     .find((q) => q.id === quizId)
+    //     .questions.reduce((a, b) => Math.max(a, b.id), -Infinity) + 1;
+    // return of({
+    //   id: generatedQuestionId,
     //   statement: statement,
-    //   answers: answers,
-    // });
+    //   answers: answers.map((answer, index) => {
+    //     return {
+    //       id: index + 1,
+    //       statement: answer.statement,
+    //       isCorrect: answer.isCorrect,
+    //       displayOrder: index + 1,
+    //     } as AnswerModel;
+    //   }),
+    // } as QuestionModel);
+    return this.post(`${this.apiUrl}/question`, {
+      quizId: quizId,
+      statement: statement,
+      answers: answers,
+    });
   }
 
   public deleteQuestion(questionId: number): Observable<void> {
-    return of();
-    // return this.delete(`${this.apiUrl}/question/${questionId}`);
+    // return of();
+    return this.delete(`${this.apiUrl}/question/${questionId}`);
   }
 
   private get(url: string): Observable<any> {
@@ -413,6 +414,8 @@ s]]]
     const options = {};
 
     options['responseType'] = responseType;
+    options['Content-Type'] = 'application/json';
+    options['Access-Control-Allow-Origin'] = 'http://localhost:4200/';
 
     return this.httpClient.post(url, data, options).pipe(
       map((res: any) => {
