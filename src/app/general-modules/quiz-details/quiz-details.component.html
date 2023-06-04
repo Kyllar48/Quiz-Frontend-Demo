@@ -1,0 +1,58 @@
+<div class="width-100 height-100 position-relative">
+  <div class="d-flex flex-column text-white justify-content-between">
+    <div class="fs-32 fw-8 mb-16 ml-8">
+      {{ loaded ? selectedQuiz.title : "Loading title ..." }}
+    </div>
+    <div class="width-100 height-40 text-break font-italic fs-12 ph-20">
+      {{ loaded ? selectedQuiz.theory : "Loading theory ..." }}
+    </div>
+    <div class="row mh-48 mt-20 justify-content-around align-items-center">
+      <div class="col">
+        <table
+          class="table table-hover fs-12 fw-6 text-white text-center max-width-300"
+        >
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Score</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let solution of history$ | async"
+              [ngClass]="{
+                'table-danger': solution.score / solution.total < 0.33,
+                'table-warning':
+                  solution.score / solution.total >= 0.33 &&
+                  solution.score / solution.total < 0.67,
+                'table-success': solution.score / solution.total >= 0.67
+              }"
+            >
+              <td>{{ solution.score }}</td>
+              <td>{{ solution.total }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-3">
+        <button
+          type="button"
+          class="btn btn-primary max-width-300 max-height-50"
+          (click)="navigateToQuizTrial()"
+        >
+          Test your knowledge with a quiz &rsaquo;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-inline-block position-absolute bottom-0 left-0 m-40">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      [routerLink]="['/dashboard']"
+    >
+      &lsaquo; Back to main page
+    </button>
+  </div>
+</div>

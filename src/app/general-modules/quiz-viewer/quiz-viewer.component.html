@@ -1,0 +1,58 @@
+<div class="width-100 height-100 position-relative">
+  <div class="d-flex flex-column">
+    <h1 class="mt-2">Spiki</h1>
+    <div class="row m-8">
+      <div
+        *ngFor="let quiz of quizzes$ | async"
+        class="card m-8 col-4 bg-info text-white"
+        style="max-width: 350px"
+      >
+        <div class="card-body">
+          <h5 class="card-title">{{ quiz.title }}</h5>
+          <p
+            class="card-text font-italic fs-12 text-break text-truncate-after-three-lines"
+          >
+            {{ quiz.theory }}
+          </p>
+          <a
+            *ngIf="loggedUser.isAdmin"
+            class="btn btn-primary float-left"
+            routerLinkActive="active"
+            (click)="navigateToQuiz(quiz, true)"
+          >
+            Edit Quiz
+          </a>
+          <a
+            class="btn btn-primary float-right"
+            routerLinkActive="active"
+            (click)="navigateToQuiz(quiz, false)"
+            >View Details</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="position-absolute bottom-0 width-100 p-25"
+    [ngClass]="{ 'row justify-content-between': loggedUser.isAdmin }"
+  >
+    <button
+      type="button"
+      class="btn btn-secondary"
+      routerLinkActive="active"
+      routerLink="/login"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+    <button
+      *ngIf="loggedUser.isAdmin"
+      type="button"
+      class="btn btn-secondary"
+      routerLinkActive="active"
+      routerLink="/grant-admin"
+    >
+      Admin Panel &rsaquo;
+    </button>
+  </div>
+</div>

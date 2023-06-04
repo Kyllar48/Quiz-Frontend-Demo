@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+@import "/src/assets/css/mixins.scss";
+
+body,
+html {
+  height: 100%;
+}
+
+@media only screen and (min-width: 1560px) {
+  .container-fluid.app-container {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+.text-truncate-after-three-lines {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
